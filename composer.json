@@ -1,0 +1,21 @@
+{
+    "name": "yak0d3/quality-router",
+    "description": "QualityRouter is a basic PHP routing system.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Raed Yak",
+            "email": "contact.raedyak@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php":">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "yak0d3\\QualityRouter\\": "src/"
+        }
+    }
+}
