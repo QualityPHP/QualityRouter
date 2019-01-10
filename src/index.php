@@ -2,8 +2,8 @@
 
 require __DIR__."/../vendor/autoload.php";
 
-use yak0d3\QualityRouter\QRouter;
-use yak0d3\QualityRouter\Request;
+use QualityPHP\QualityRouter\QRouter;
+use QualityPHP\QualityRouter\Request;
 
 $router = new QRouter('config.php');
 $request = new Request($router);

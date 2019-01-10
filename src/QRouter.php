@@ -1,6 +1,6 @@
 <?php
 
-namespace yak0d3\QualityRouter;
+namespace QualityPHP\QualityRouter;
 
 use Exception;
 use Closure;
@@ -47,7 +47,7 @@ class QRouter
     }
     
     /**
-     * Create new route statically
+     * Create a new route statically
      *
      * @param string $method
      * @param array $args
@@ -122,10 +122,8 @@ class QRouter
             throw new Exception('Invalid configuration.');
         }
 
-        foreach ($this->configKeys as $key) {
-            if (!array_key_exists($key, $config)) {
-                throw new Exception('Invalid configuration');
-            }
+        if ((bool) array_diff($this->configKeys, $config) == false) {
+            throw new Exception('Invalid configuration');
         }
 
         return $config;

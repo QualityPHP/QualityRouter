@@ -1,5 +1,5 @@
 {
-    "name": "yak0d3/quality-router",
+    "name": "qualityphp/quality-router",
     "description": "QualityRouter is a basic PHP routing system.",
     "type": "library",
     "license": "MIT",
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "yak0d3\\QualityRouter\\": "src/"
+            "QualityPHP\\QualityRouter\\": "src/"
         }
     }
 }

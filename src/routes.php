@@ -1,9 +1,14 @@
 <?php
 
-namespace yak0D3\QualityRouter;
+namespace QualityPHP\QualityRouter;
 
-QRouter::POST('/', function () {
-    echo "hello";
+function pointTo(string $filename)
+{
+    include $filename;
+}
+
+QRouter::POST('/', function() {
+    echo "Test";
 });
 
 QRouter::GET('/hello', function () {

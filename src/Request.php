@@ -1,13 +1,13 @@
 <?php
 
-namespace yak0d3\QualityRouter;
+namespace QualityPHP\QualityRouter;
 
 class Request
 {
     /**
      * The router instance
      *
-     * @var \yak0d3\QualityRouter\QRouter
+     * @var \QualityPHP\QualityRouter\QRouter
      */
     protected $router;
 
@@ -28,7 +28,7 @@ class Request
     /**
      * Create a new instance of the Request class
      *
-     * @param \yak0d3\QualityRouter\QRouter $router
+     * @param \QualityPHP\QualityRouter\QRouter $router
      * @return void
      */
     public function __construct(QRouter $router)
