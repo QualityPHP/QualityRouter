@@ -1,3 +1,4 @@
 /vendor/
 /.vscode/
 .php_cs.cache
+.history
