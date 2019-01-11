@@ -1,6 +1,6 @@
 <?php
 
 return [
-    "APP_DIR" => "src/",
+    "APP_DIR" => "app",
     "ROUTES" => "routes.php"
 ];
