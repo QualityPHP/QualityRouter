@@ -20,16 +20,23 @@ class QRouter
      * @var array
      */
     protected static $routes = [];
+    
+    /**
+     * Router configuration
+     *
+     * @var array
+     */
+    public static $rConfig = ['AUTO' => false];
 
     /**
-     * The configuration keys
+     * App Configuration Keys
      *
      * @var array
      */
     protected $configKeys = ['APP_DIR', 'ROUTES'];
     
     /**
-     * The configuration array
+     * App configuration
      *
      * @var array
      */
@@ -52,6 +59,7 @@ class QRouter
      * @param string $method
      * @param array $args
      * @return void
+     * @throws \Exception
      */
     public static function __callStatic(string $method, array $args)
     {
@@ -137,5 +145,26 @@ class QRouter
     protected function loadRoutes()
     {
         include $this->config['ROUTES'];
+    }
+
+    /**
+     * Set a configuration key
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     * @throws \Exception
+     */
+    public static function CONFSET(string $key, $value)
+    {
+        if (!array_key_exists($key, self::$rConfig)) {
+            throw new Exception('Invalid router configuration key.');
+        }
+        
+        if (gettype($value) !== gettype(self::$rConfig[$key])) {
+            throw new Exception("Invalid value given to $key.");
+        }
+
+        self::$rConfig[$key] = $value;
     }
 }
