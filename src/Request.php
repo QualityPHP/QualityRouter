@@ -2,6 +2,8 @@
 
 namespace QualityPHP\QualityRouter;
 
+use Exception;
+
 class Request
 {
     /**
@@ -31,10 +33,11 @@ class Request
      * @param \QualityPHP\QualityRouter\QRouter $router
      * @return void
      */
-    public function __construct(QRouter $router)
+    public function __construct(QRouter $router, array $request)
     {
         $this->router = $router;
-        $this->request = $_SERVER;
+        $this->request = $request;
+        $this->config = $this->router->config;
     }
 
     /**
@@ -46,13 +49,48 @@ class Request
     {
         $uri = $this->getRequestUri($this->router->config);
 
+        if ($this->router::$rConfig['AUTO']) {
+            return $this->automaticResponse($uri);
+        }
+        
+        $this->regularResponse($uri);
+    }
+    
+    /**
+     * Regular response; The route's callback will be called
+     *
+     * @param string $uri
+     * @return void
+     */
+    protected function regularResponse(string $uri)
+    {
         $this->checkURI($uri);
 
         $route = $this->router->getRoute($uri);
 
         $this->checkMethod($route);
 
-        call_user_func($route->CALLBACK);
+        return call_user_func($route->CALLBACK);
+    }
+
+    /**
+     * Automatic Response; The file contents from the given filename
+     * will be included
+     *
+     * @param string $uri
+     * @return void
+     * @throws \Exception
+     */
+    protected function automaticResponse(string $uri)
+    {
+        $appDir = $this->appDir();
+        #TODO: Add dynamic extensions support
+        if (!file_exists($appDir.$uri.'.php')) {
+            http_response_code(405);
+            throw new Exception('Not found: '.$appDir.$uri.'.php', 404);
+        }
+
+        include $appDir.$uri.'.php';
     }
 
     /**
@@ -60,14 +98,14 @@ class Request
      *
      * @param object $route
      * @return void
+     * @throws \Exception
      */
     protected function checkMethod(object $route)
     {
         if ($route->METHOD != $this->request['REQUEST_METHOD']) {
             #TODO: Implement error pages
             http_response_code(405);
-            echo "<h1> 405 Method Not Allowed</h1>";
-            die();
+            throw new Exception("<h1> 405 Method Not Allowed</h1>", 405);
         }
     }
 
@@ -76,29 +114,40 @@ class Request
      *
      * @param string $uri
      * @return void
+     * @throws \Exception
      */
     protected function checkURI(string $uri)
     {
         if (!$this->router->has($uri)) {
             #TODO: Implement error pages
             http_response_code(404);
-            echo "<h1> 404 Not Found</h1>";
-            echo "<hr/>";
-            echo "<p>The requested page was not found.</p>";
-            die();
+            throw new Exception("<h1> 404 Not Found</h1>".
+                                "<hr/>".
+                                "<p>The requested page was not found.</p>", 404);
         }
     }
+    
     /**
      * Get the request URI
      *
      * @param array $config
      * @return string
      */
-    protected function getRequestUri(array $config)
+    protected function getRequestUri()
     {
         $uri = $_SERVER['REQUEST_URI'];
         $currentDir = '/'.basename(__DIR__);
 
         return str_replace($currentDir, '', $uri);
+    }
+
+    /**
+     * Get the application directory
+     *
+     * @return string
+     */
+    protected function appDir()
+    {
+        return $this->config['APP_DIR'];
     }
 }
