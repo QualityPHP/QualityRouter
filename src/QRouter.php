@@ -12,7 +12,7 @@ class QRouter
      *
      * @var array
      */
-    protected static $methods = ['GET', 'POST'];
+    protected static $methods = ['GET', 'POST', 'ANY'];
 
     /**
      * The routes list
@@ -47,9 +47,9 @@ class QRouter
      *
      * @return void
      */
-    public function __construct(string $config)
+    public function __construct(array $config)
     {
-        $this->config = $this->getConfig($config);
+        $this->config = $config;
         $this->loadRoutes();
     }
     
@@ -107,34 +107,6 @@ class QRouter
     public function has(string $uri)
     {
         return in_array($uri, array_keys(self::$routes));
-    }
-
-    /**
-     * Get the configuration file
-     *
-     * @param string $configFile
-     * @return array
-     * @throws \Exception
-     */
-    protected function getConfig(string $configFile)
-    {
-        $configFile = __DIR__.'/'.$configFile;
-
-        if (!file_exists($configFile)) {
-            throw new Exception("The configuration file '$configFile' was not found.");
-        }
-
-        $config = include $configFile;
-
-        if (!is_array($config)) {
-            throw new Exception('Invalid configuration.');
-        }
-
-        if ((bool) array_diff($this->configKeys, $config) == false) {
-            throw new Exception('Invalid configuration');
-        }
-
-        return $config;
     }
 
     /**

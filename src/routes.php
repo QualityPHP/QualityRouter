@@ -6,10 +6,14 @@ namespace QualityPHP\QualityRouter;
                                    # and respond with file contents from the app dir (provided in the config.php file)
                                    # e.g. Request uri = /FILENAME, then the response will be /APP_DIR/FILENAME.php
 
-QRouter::POST('/', function () {
-    echo "Test";
+QRouter::GET('/get', function () {
+    echo "GET";
 });
 
-QRouter::GET('/hello', function () {
-    echo "here you go";
+QRouter::POST('/post', function () {
+    echo "POST";
+});
+
+QRouter::ANY('/any', function() {
+    echo "ANY";
 });

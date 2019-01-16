@@ -83,14 +83,31 @@ class Request
      */
     protected function automaticResponse(string $uri)
     {
-        $appDir = $this->appDir();
+        $file = $this->appFile($uri);
         #TODO: Add dynamic extensions support
-        if (!file_exists($appDir.$uri.'.php')) {
-            http_response_code(405);
-            throw new Exception('Not found: '.$appDir.$uri.'.php', 404);
+        if ($file == false) {
+            http_response_code(404);
+            throw new Exception("Not found: $uri", 404);
         }
 
-        include $appDir.$uri.'.php';
+        include $file;
+    }
+
+    /**
+     * Get a file from the app directory
+     *
+     * @param string $uri
+     * @param string $extension
+     * @return bool|string
+     */
+    private function appFile(string $uri, string $extension = '.php')
+    {
+        $appDir = $this->appDir();
+        if (!file_exists($appDir.$uri.$extension)) {
+            return false;
+        }
+
+        return $appDir.$uri.$extension;
     }
 
     /**
@@ -102,6 +119,10 @@ class Request
      */
     protected function checkMethod(object $route)
     {
+        if ($route->METHOD == 'ANY') {
+            return;
+        }
+        
         if ($route->METHOD != $this->request['REQUEST_METHOD']) {
             #TODO: Implement error pages
             http_response_code(405);
@@ -121,9 +142,7 @@ class Request
         if (!$this->router->has($uri)) {
             #TODO: Implement error pages
             http_response_code(404);
-            throw new Exception("<h1> 404 Not Found</h1>".
-                                "<hr/>".
-                                "<p>The requested page was not found.</p>", 404);
+            throw new Exception("The requested page was not found.", 404);
         }
     }
     
